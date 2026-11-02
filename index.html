@@ -1,39 +1,261 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Davnel2166 Portfolio</title>
-    <link rel="stylesheet" href="style.css">
+    <title>RedTeamRecon/davnel2166 - Security Research & Web Applications</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        cyber: {
+                            50: '#fef2f2',
+                            100: '#fee2e2',
+                            500: '#ef4444',
+                            600: '#dc2626',
+                            700: '#b91c1c',
+                            900: '#7f1d1d',
+                            950: '#450a0a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Font Inter & Fira Code -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-code { font-family: 'Fira Code', monospace; }
+        
+        /* Custom Tooltip Styling */
+        .tooltip-container {
+            position: relative;
+        }
+        .tooltip-container .tooltip-text {
+            visibility: hidden;
+            width: 180px;
+            background-color: #450a0a;
+            color: #fca5a5;
+            text-align: center;
+            border-radius: 6px;
+            padding: 6px 10px;
+            position: absolute;
+            z-index: 50;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 0.8rem;
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.3);
+            pointer-events: none;
+        }
+        .tooltip-container .tooltip-text::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: #450a0a transparent transparent transparent;
+        }
+        .tooltip-container:hover .tooltip-text {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .cyber-glow {
+            box-shadow: 0 0 25px rgba(239, 68, 68, 0.25);
+        }
+    </style>
 </head>
-<body class="bg-gray-900 text-white font-sans">
+<body class="bg-zinc-950 text-zinc-100 transition-colors duration-300 min-h-screen flex flex-col justify-between selection:bg-red-500 selection:text-white">
 
-    <!-- Hero Section -->
-    <section class="hero-section p-8 text-center">
-        <h1 id="about-heading">Welcome to My Portfolio</h1>
-        <img id="profile-img" src="avatar.png" alt="Profile" class="w-32 h-32 mx-auto rounded-full my-4">
-        <p class="text-gray-400">Cybersecurity & Software Development Projects</p>
-    </section>
+    <!-- 1. CUSTOM WELCOME MODAL -->
+    <div id="welcome-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md transition-opacity duration-300">
+        <div class="bg-zinc-900 border border-red-500/40 rounded-2xl p-6 sm:p-8 max-w-md w-full mx-4 shadow-2xl cyber-glow transform transition-all scale-100">
+            <div class="flex items-center space-x-3 mb-4">
+                <div class="w-10 h-10 rounded-xl bg-red-500/10 border border-red-500/30 flex items-center justify-center text-red-500">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                </div>
+                <div>
+                    <h3 class="text-lg font-bold font-code tracking-wider text-red-500">SYSTEM ALERT</h3>
+                    <p class="text-xs text-zinc-400">RedTeamRecon Terminal</p>
+                </div>
+            </div>
+            <p class="text-zinc-300 text-sm leading-relaxed mb-6 font-code">
+                > INITIALIZING...<br>
+                > This page is a work in progress. Explore our secure tools, threat assessments, and client state modules below.
+            </p>
+            <div class="flex justify-end">
+                <button id="close-modal-btn" class="w-full sm:w-auto px-6 py-2.5 bg-red-600 hover:bg-red-500 text-white font-semibold rounded-xl text-sm transition-all shadow-lg shadow-red-600/40 border border-red-400/30 cursor-pointer font-code tracking-wider">
+                    [ DISMISS ]
+                </button>
+            </div>
+        </div>
+    </div>
 
-    <!-- Projects Section -->
-    <section id="projects" class="p-8 max-w-4xl mx-auto">
-        <h2 class="text-2xl font-bold mb-4">Projects</h2>
-        <!-- New project paragraphs will be dynamically appended here -->
-    </section>
+    <!-- Navigation Header -->
+    <header class="sticky top-0 z-40 bg-zinc-900/90 backdrop-blur-md border-b border-zinc-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="h-9 w-9 rounded-lg bg-gradient-to-tr from-red-700 to-rose-500 flex items-center justify-center text-white font-bold font-code text-lg shadow-lg shadow-red-500/30 border border-red-400/20">
+                    RT
+                </div>
+                <span class="font-bold tracking-tight text-lg font-code">RedTeam<span class="text-red-500">Recon</span></span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <!-- Dark/Cyber Mode Toggle Switch -->
+                <label for="dark-mode-toggle" class="flex items-center cursor-pointer select-none">
+                    <div class="relative">
+                        <input type="checkbox" id="dark-mode-toggle" class="sr-only">
+                        <div class="block bg-zinc-800 border border-zinc-700 w-12 h-6 rounded-full transition"></div>
+                        <div class="dot absolute left-1 top-1 bg-red-500 w-4 h-4 rounded-full transition transform translate-x-6 flex items-center justify-center text-[9px]">
+                            <span class="inline">🛡️</span>
+                        </div>
+                    </div>
+                </label>
+            </div>
+        </div>
+    </header>
 
-    <!-- Contact Form Section -->
-    <section class="p-8 max-w-md mx-auto">
-        <h2 class="text-2xl font-bold mb-4">Contact Me</h2>
-        <form id="contact-form" class="flex flex-col gap-4">
-            <input type="text" id="name" placeholder="Your Name" required class="p-2 rounded bg-gray-800 border border-gray-700" />
-            <input type="email" id="email" placeholder="Your Email" required class="p-2 rounded bg-gray-800 border border-gray-700" />
-            <textarea id="message" placeholder="Your Message" required class="p-2 rounded bg-gray-800 border border-gray-700"></textarea>
-            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded font-semibold transition">Send Message</button>
-            <div id="form-status" class="mt-2 text-sm"></div>
-        </form>
-    </section>
+    <!-- Main Content Body -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full space-y-12">
+        <!-- Hero Section -->
+        <section class="text-center space-y-4 py-8">
+            <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-semibold font-code">
+                <span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
+                <span>SECURE OPS ACTIVE // CYBER RED THEME</span>
+            </div>
+            <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight">Cyber Security & State Architecture</h1>
+            <p class="max-w-2xl mx-auto text-zinc-400 text-base">
+                Advanced vulnerability research, robust client-side storage protocols, and resilient server-side integration pipelines.
+            </p>
+        </section>
 
-    <!-- Link the JavaScript file with 'defer' so it runs after the DOM is parsed -->
-    <script src="script.js" defer></script>
+        <!-- Tools & Features Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Card 1 -->
+            <div class="p-6 bg-zinc-900 border border-zinc-800 hover:border-red-500/40 rounded-2xl shadow-sm transition group">
+                <div class="w-10 h-10 rounded-xl bg-red-500/10 border border-red-500/20 text-red-500 flex items-center justify-center mb-4 group-hover:scale-110 transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                </div>
+                <h3 class="text-lg font-bold mb-2 font-code">Client State Storage</h3>
+                <p class="text-sm text-zinc-400 leading-relaxed">
+                    Protecting session tokens with HttpOnly cookies while securely maintaining UI preferences via localStorage with automated state synchronization.
+                </p>
+            </div>
+
+            <!-- Card 2 -->
+            <div class="p-6 bg-zinc-900 border border-zinc-800 hover:border-red-500/40 rounded-2xl shadow-sm transition group">
+                <div class="w-10 h-10 rounded-xl bg-red-500/10 border border-red-500/20 text-red-500 flex items-center justify-center mb-4 group-hover:scale-110 transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+                </div>
+                <h3 class="text-lg font-bold mb-2 font-code">Threat Mitigation</h3>
+                <p class="text-sm text-zinc-400 leading-relaxed">
+                    Hardening endpoints against XSS and CSRF vectors, context-aware input escaping, and interactive tooltip elements for secure operations.
+                </p>
+            </div>
+        </div>
+
+        <!-- 2. CONTACT FORM WITH SUBMIT BUTTON TOOLTIP -->
+        <section class="max-w-xl mx-auto w-full bg-zinc-900 border border-zinc-800 p-6 sm:p-8 rounded-2xl shadow-xl">
+            <h3 class="text-xl font-bold mb-2 font-code text-red-500">Secure Dispatch Terminal</h3>
+            <p class="text-xs text-zinc-400 mb-6 font-code">Encrypted payload transmission to red team leadership.</p>
+            
+            <form id="contact-form" onsubmit="handleFormSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider mb-1 text-zinc-400 font-code">Operator Email</label>
+                    <input type="email" required placeholder="analyst@redteamrecon.internal" class="w-full px-4 py-2.5 rounded-xl border border-zinc-700 bg-zinc-950 text-sm text-zinc-100 focus:outline-none focus:ring-2 focus:ring-red-500 font-code">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase tracking-wider mb-1 text-zinc-400 font-code">Transmission Payload</label>
+                    <textarea rows="3" required placeholder="Enter intelligence or query details..." class="w-full px-4 py-2.5 rounded-xl border border-zinc-700 bg-zinc-950 text-sm text-zinc-100 focus:outline-none focus:ring-2 focus:ring-red-500 font-code"></textarea>
+                </div>
+
+                <!-- Submit Button with Tooltip Container -->
+                <div class="tooltip-container pt-2">
+                    <span class="tooltip-text">Click to send your message!</span>
+                    <button type="submit" id="submit-btn" class="w-full py-3 bg-red-600 hover:bg-red-500 text-white font-semibold rounded-xl text-sm transition-all shadow-lg shadow-red-600/30 border border-red-400/30 cursor-pointer flex items-center justify-center space-x-2 font-code tracking-wider">
+                        <span>TRANSMIT MESSAGE</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                    </button>
+                </div>
+            </form>
+            <div id="form-success-msg" class="hidden mt-4 p-3 bg-red-500/10 border border-red-500/30 text-red-400 text-xs rounded-xl text-center font-medium font-code">
+                > TRANSMISSION SUCCESSFUL: Payload securely delivered.
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-zinc-800 py-6 mt-12 text-center text-xs text-zinc-500 font-code">
+        <p>&copy; 2026 RedTeamRecon. All rights reserved. Secured Red Cyber Environment.</p>
+    </footer>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // --- 3. PERSIST DARK/CYBER MODE PREFERENCE ---
+        const darkModeToggle = document.getElementById('dark-mode-toggle');
+        const htmlElement = document.documentElement;
+
+        // Check local storage on initial load (defaults to dark cyber theme)
+        const storedTheme = localStorage.getItem('theme');
+        if (storedTheme === 'light') {
+            htmlElement.classList.remove('dark');
+            darkModeToggle.checked = false;
+        } else {
+            htmlElement.classList.add('dark');
+            darkModeToggle.checked = true;
+            localStorage.setItem('theme', 'dark');
+        }
+
+        // Event listener for toggle changes
+        darkModeToggle.addEventListener('change', function() {
+            if (this.checked) {
+                htmlElement.classList.add('dark');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                htmlElement.classList.remove('dark');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+
+        // --- 1. CUSTOM WELCOME MODAL LOGIC ---
+        const welcomeModal = document.getElementById('welcome-modal');
+        const closeModalBtn = document.getElementById('close-modal-btn');
+
+        closeModalBtn.addEventListener('click', function() {
+            welcomeModal.classList.add('opacity-0', 'pointer-events-none');
+            setTimeout(() => {
+                welcomeModal.style.display = 'none';
+            }, 300);
+        });
+
+        // Close on background backdrop click
+        welcomeModal.addEventListener('click', function(e) {
+            if (e.target === welcomeModal) {
+                closeModalBtn.click();
+            }
+        });
+
+        // --- CONTACT FORM SIMULATION ---
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            const successMsg = document.getElementById('form-success-msg');
+            successMsg.classList.remove('hidden');
+            document.getElementById('contact-form').reset();
+            setTimeout(() => {
+                successMsg.classList.add('hidden');
+            }, 5000);
+        }
+    </script>
 </body>
 </html>
