@@ -165,6 +165,18 @@
             </div>
         </div>
 
+        <!-- DYNAMIC PROJECTS SECTION -->
+        <section id="projects-section" class="space-y-6">
+            <div class="flex items-center justify-between border-b border-zinc-800 pb-4">
+                <h3 class="text-xl font-bold font-code text-red-500">> FEATURED PROJECTS & REPOSITORIES</h3>
+                <span class="text-xs text-zinc-500 font-code">Rendered via sessionStorage & DOM</span>
+            </div>
+            <!-- Target Container for Dynamic Project Insertion -->
+            <div id="projects-container" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Dynamically populated by script.js / inline script -->
+            </div>
+        </section>
+
         <!-- 2. CONTACT FORM WITH SUBMIT BUTTON TOOLTIP -->
         <section class="max-w-xl mx-auto w-full bg-zinc-900 border border-zinc-800 p-6 sm:p-8 rounded-2xl shadow-xl">
             <h3 class="text-xl font-bold mb-2 font-code text-red-500">Secure Dispatch Terminal</h3>
@@ -256,6 +268,72 @@
                 successMsg.classList.add('hidden');
             }, 5000);
         }
+
+        // --- CUSTOM PROJECT OBJECTS & SESSIONSTORAGE RENDERING ---
+        const projectsArray = [
+            {
+                title: "Red Team Recon CTF Platform",
+                summary: "A self-hosted 31-challenge cybersecurity CTF platform built with Python Flask, SQLite, and Jinja2 templates.",
+                icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg",
+                repoLink: "https://github.com/RedTeamRecon/RedTeamRecon.github.io"
+            },
+            {
+                title: "Bill Splitter Web App",
+                summary: "An interactive front-end utility featuring live tip validation, calculation breakdown, and responsive design.",
+                icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg",
+                repoLink: "https://github.com/RedTeamRecon/RedTeamRecon.github.io"
+            },
+            {
+                title: "Visitor Tracking Exercise",
+                summary: "A client-side tracking application utilizing browser cookies to record and display visit timestamps.",
+                icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg",
+                repoLink: "https://github.com/RedTeamRecon/RedTeamRecon.github.io"
+            }
+        ];
+
+        const STORAGE_KEY = "portfolio_projects_data";
+
+        function initializeSessionProjects() {
+            const existingData = sessionStorage.getItem(STORAGE_KEY);
+            if (!existingData) {
+                // Store array stringified if not present
+                sessionStorage.setItem(STORAGE_KEY, JSON.stringify(projectsArray));
+                return projectsArray;
+            } else {
+                // Parse existing session data
+                return JSON.parse(existingData);
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const projectsToRender = initializeSessionProjects();
+            const projectSection = document.getElementById("projects-container");
+
+            if (projectSection) {
+                projectSection.innerHTML = ""; // Clear wrapper
+                
+                projectsToRender.forEach(proj => {
+                    const card = document.createElement("div");
+                    card.className = "p-6 bg-zinc-900 border border-zinc-800 hover:border-red-500/40 rounded-2xl shadow-sm transition group flex flex-col justify-between";
+
+                    card.innerHTML = `
+                        <div>
+                            <div class="w-12 h-12 rounded-xl bg-red-500/10 border border-red-500/20 flex items-center justify-center mb-4 group-hover:scale-110 transition p-2.5">
+                                <img src="${proj.icon}" alt="${proj.title} Icon" class="w-full h-full object-contain">
+                            </div>
+                            <h4 class="text-lg font-bold mb-2 font-code text-zinc-100">${proj.title}</h4>
+                            <p class="text-sm text-zinc-400 leading-relaxed mb-6">${proj.summary}</p>
+                        </div>
+                        <a href="${proj.repoLink}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center space-x-2 text-xs font-code font-semibold text-red-400 hover:text-red-300 transition">
+                            <span>VIEW REPOSITORY</span>
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+                        </a>
+                    `;
+
+                    projectSection.appendChild(card);
+                });
+            }
+        });
     </script>
 </body>
 </html>
