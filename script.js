@@ -1,9 +1,6 @@
 // ==========================================
 // 1. DYNAMICALLY ADDING ELEMENTS & NOTIFICATIONS
 // ==========================================
-// ==========================================
-// 1. DYNAMICALLY ADDING ELEMENTS & NOTIFICATIONS
-// ==========================================
 
 document.addEventListener('DOMContentLoaded', () => {
   // A. Append a new project paragraph to the "Projects" section
